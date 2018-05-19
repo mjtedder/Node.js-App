@@ -28,6 +28,7 @@
     "node-spotify-api": "^1.0.7",
     "request": "^2.86.0",
     "save": "^2.3.2",
+    "spotify-web-api-node": "^3.1.1",
     "twitter": "^1.7.1"
   }
 }
