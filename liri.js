@@ -27,12 +27,12 @@ function logData(str = '', type = '', time = moment().format('MM/DD/YYYY hh:mm:s
     }
     if (str) {
         console.log(str);
-    
+
     fs.appendFileSync('./log.txt', str);
     }
 }
 
-//Twitter 
+//Twitter
 function getTweets() {
     logData('',"Tweet")
 
@@ -51,7 +51,7 @@ function getTweets() {
 
 //Spotify
 function searchSong(title) {
-    
+
     var track = {};
 
     if (title) {
@@ -62,7 +62,7 @@ function searchSong(title) {
         }
 
         spotify.search(params, function(err, response) {
-            
+
             if (err) {
                 return console.log(err);
             }
@@ -74,11 +74,9 @@ function searchSong(title) {
                 "Preview: " + track.preview_url + '\n' +
                 "Album Name: " + track.album.name + '\n\n',
                 "Song");
-        
         });
     }   else {
         spotify.request('https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx').then(function(response) {
-            
         track = response;
 
             logData("Artist: " + track.artists[0].name + '\n' +
@@ -86,9 +84,8 @@ function searchSong(title) {
                 "Preview: " + track.preview_url + '\n' +
                 "Album Name: " + track.album.name + '\n\n',
                 "Song");
-        
         });
-    } 
+    }
 }
 
 //OMDB
@@ -113,7 +110,6 @@ function searchMovie(title = "Mr. Nobody") {
         "Actors: " + movie.Actors + '\n',
         "Movie"
     );
-    
 });
 
 }
@@ -138,7 +134,7 @@ switch (command) {
     searchMovie(input);
     break;
     default:
-        console.log('default case');
+        console.log("I'm sorry, I don't recognize that command.");
 }
 
 
