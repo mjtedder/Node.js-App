@@ -10,6 +10,7 @@ var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 var moment = require('moment');
 var request = require('request');
+var axios = require('axios');
 var fs = require('fs');
 
 //getting API keys
@@ -86,28 +87,28 @@ var searchSong = function (title) {
 }
 
 //OMDB
-function searchMovie(title = "Mr. Nobody") {
+var searchMovie = function (movieTitle) {
+    if (movieTitle === undefined) {
+        movieTitle = "Eternal Sunshine Of The Spotless Mind"
+    }
 
-    request('https://omdbapi.com/?t=' + title + '&apikey=trilogy', function (err, response, body) {
-        var movie = JSON.parse(body);
-        var tomatoScore = '';
-        for (i of movie.Ratings) {
-            i.Source === 'Rotten Tomatoes' ?
-                tomatoScore = i.value : '';
-        }
+    var queryUrl = 'https://omdbapi.com/?t=' + movieTitle + '&y=&plot=full&tomatoes=true&apikey=trilogy'
 
-        logData(
-            "Title: " + movie.Title + '\n' +
-            "Year: " + movie.Year + '\n' +
-            "IMDB Score: " + movie.imdbRating + '\n' +
-            //"Rotten Tomatoes Rating: " + tomatoScore + '\n' +
-            "Country: " + movie.Country + '\n' +
-            "Language: " + movie.Language + '\n' +
-            "Plot: " + movie.Plot + '\n' +
-            "Actors: " + movie.Actors + '\n',
-            "Movie"
-        );
-    });
+    axios.get(queryUrl).then(
+        function (response) {
+            var movie = response.data;
+            logData(
+                "Title: " + movie.Title + '\n' +
+                "Year: " + movie.Year + '\n' +
+                "IMDB Score: " + movie.imdbRating + '\n' +
+                "Rotten Tomatoes Rating: " + movie.Ratings[1].Value + '\n' +
+                "Country: " + movie.Country + '\n' +
+                "Language: " + movie.Language + '\n' +
+                "Plot: " + movie.Plot + '\n' +
+                "Actors: " + movie.Actors + '\n',
+                "-----------------------------------------------------------"
+            );
+        });
 
 }
 

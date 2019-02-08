@@ -387,3 +387,29 @@ Song Name: My Fault
 Preview: https://p.scdn.co/mp3-preview/5218efcc7d8865f5343d132fcf35430dfee9cda2?cid=a3aab167200c4c49b1d87b0c67eba8a8
 Album Name: Origami
 
+Movie request made at: 02/08/2019 11:13:38
+Title: The Shawshank Redemption
+Year: 1994
+IMDB Score: 9.3
+Country: USA
+Language: English
+Plot: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.
+Actors: Tim Robbins, Morgan Freeman, Bob Gunton, William Sadler
+----------------------------------------------------------- request made at: 02/08/2019 11:28:59
+Title: The Shawshank Redemption
+Year: 1994
+IMDB Score: 9.3
+Rotten Tomatoes Rating: 91%
+Country: USA
+Language: English
+Plot: Chronicles the experiences of a formerly successful banker as a prisoner in the gloomy jailhouse of Shawshank after being found guilty of a crime he did not commit. The film portrays the man's unique way of dealing with his new, torturous life; along the way he befriends a number of fellow prisoners, most notably a wise long-term inmate named Red.
+Actors: Tim Robbins, Morgan Freeman, Bob Gunton, William Sadler
+----------------------------------------------------------- request made at: 02/08/2019 11:30:23
+Title: Eternal
+Year: 2004
+IMDB Score: 4.9
+Rotten Tomatoes Rating: 21%
+Country: Canada
+Language: English
+Plot: Detective Raymond Pope is a detective of questionable morals, searching for his missing wife. His investigation leads him to the wealthy estate of the enigmatic Elizabeth Kane and her young maid Irina. Under Elizabeth's fascinating looks and aristocratic manners hides a terrifying secret,shared by her companion Irina. As Detective Pope finds himself perversely drawn to the powerful Elizabeth, bodies begin to surface, his inquiries only deepening the mystery surrounding Elizabeth's past. Pope's obsession grows so intense that he completely fails to anticipate Elizabeth's reaction to his intrusion into her dark world, a fatal mistake that might cost him his life and the lives of those close to him.
+Actors: Caroline Néron, Sarah Manninen, Victoria Sanchez, Conrad Pla
