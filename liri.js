@@ -16,11 +16,12 @@ var fs = require('fs');
 var spotify = new Spotify(keys.spotify);
 var twitter = new Twitter(keys.twitter);
 
+// saving user inputs to a variable
 var command = process.argv[2];
 var input = process.argv[3];
 
 //Uses moment.js to log timestamps each time liri app is used
-function logData(str = '', type = '', time = moment().format('MM/DD/YYYY hh:mm:ss')){
+function logData(str = '', type = '', time = moment().format('MM/DD/YYYY hh:mm:ss')) {
 
     if (type) {
         fs.appendFileSync('./log.txt', type + " request made at: " + time + '\n');
@@ -28,16 +29,16 @@ function logData(str = '', type = '', time = moment().format('MM/DD/YYYY hh:mm:s
     if (str) {
         console.log(str);
 
-    fs.appendFileSync('./log.txt', str);
+        fs.appendFileSync('./log.txt', str);
     }
 }
 
-//Twitter
+//Twitter=======================================================
 function getTweets() {
-    logData('',"Tweet")
+    logData('', "Tweet")
 
-    twitter.get('statuses/user_timeline', function(err, response) {
-        if(err) {
+    twitter.get('statuses/user_timeline', function (err, response) {
+        if (err) {
             return console.log(err);
         }
         for (tweet of response) {
@@ -49,68 +50,64 @@ function getTweets() {
     });
 }
 
-//Spotify
-function searchSong(title) {
+//Get names of various artists=============================
+var getArtistNames = function (artist) {
+    return artist.name;
+}
 
-    var track = {};
+//Spotify=================================================
+var searchSong = function (title) {
 
-    if (title) {
-        var params = {
+    if (title === undefined) {
+        title = "All Apologies";
+    }
+
+    spotify.search({
             type: 'track',
-            query: title,
-            limit: 1
-        }
-
-        spotify.search(params, function(err, response) {
-
+            query: title
+        },
+        function (err, response) {
             if (err) {
-                return console.log(err);
+                console.log('Error occurred: ' + err);
+                return;
             }
 
-            track = response.tracks.items[0];
+            var tracks = response.tracks.items;
 
-            logData("Artist: " + track.artists[0].name + '\n' +
-                "Song Name: " + track.name + '\n' +
-                "Preview: " + track.preview_url + '\n' +
-                "Album Name: " + track.album.name + '\n\n',
-                "Song");
-        });
-    }   else {
-        spotify.request('https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx').then(function(response) {
-        track = response;
+            for (var i = 0; i < tracks.length; i++) {
 
-            logData("Artist: " + track.artists[0].name + '\n' +
-                "Song Name: " + track.name + '\n' +
-                "Preview: " + track.preview_url + '\n' +
-                "Album Name: " + track.album.name + '\n\n',
-                "Song");
-        });
-    }
+                logData("Artist: " + tracks[i].artists.map(getArtistNames) + '\n' +
+                    "Song Name: " + tracks[i].name + '\n' +
+                    "Preview: " + tracks[i].preview_url + '\n' +
+                    "Album Name: " + tracks[i].album.name + '\n\n', +
+                    "------------------------------------------------")
+            }
+        })
 }
 
 //OMDB
 function searchMovie(title = "Mr. Nobody") {
 
-    request('https://omdbapi.com/?t=' + title + '&apikey=trilogy', function(err, response, body) {
+    request('https://omdbapi.com/?t=' + title + '&apikey=trilogy', function (err, response, body) {
         var movie = JSON.parse(body);
         var tomatoScore = '';
-        for( i of movie.Ratings) {
+        for (i of movie.Ratings) {
             i.Source === 'Rotten Tomatoes' ?
-            tomatoScore = i.value : '';
+                tomatoScore = i.value : '';
         }
 
-    logData(
-        "Title: " + movie.Title + '\n' +
-        "Year: " + movie.Year + '\n' +
-        "IMDB Score: " + movie.imdbRating + '\n' +
-        //"Rotten Tomatoes Rating: " + tomatoScore + '\n' +
-        "Country: " + movie.Country + '\n' +
-        "Language: " + movie.Language + '\n' +
-        "Plot: " + movie.Plot + '\n' +
-        "Actors: " + movie.Actors + '\n',
-        "Movie"
-    );
-});
+        logData(
+            "Title: " + movie.Title + '\n' +
+            "Year: " + movie.Year + '\n' +
+            "IMDB Score: " + movie.imdbRating + '\n' +
+            //"Rotten Tomatoes Rating: " + tomatoScore + '\n' +
+            "Country: " + movie.Country + '\n' +
+            "Language: " + movie.Language + '\n' +
+            "Plot: " + movie.Plot + '\n' +
+            "Actors: " + movie.Actors + '\n',
+            "Movie"
+        );
+    });
 
 }
 
@@ -131,21 +128,21 @@ switch (command) {
         searchSong(input);
         break;
     case 'movie-this':
-    searchMovie(input);
-    break;
+        searchMovie(input);
+        break;
     default:
-        console.log("I'm sorry, I don't recognize that command.");
+        console.log("I'm sorry, LIRI doesn't recognize that command.");
 }
 
 
 
 
 //client.stream('statuses/filter', {track: 'twitter'}, function(stream) {
-    //stream.on('data', function(tweet) {
-        //console.log(tweet.text);
-    //});
+//stream.on('data', function(tweet) {
+//console.log(tweet.text);
+//});
 
-    //stream.on('error', function(error) {
-       // console.log(error);
-    //});
+//stream.on('error', function(error) {
+// console.log(error);
+//});
 //})
