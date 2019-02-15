@@ -20,6 +20,8 @@ var twitter = new Twitter(keys.twitter);
 // saving user inputs to a variable
 var command = process.argv[2];
 var input = process.argv[3];
+// var inputWords = inputWords.join(' ');
+
 
 //Uses moment.js to log timestamps each time liri app is used
 function logData(str = '', type = '', time = moment().format('MM/DD/YYYY hh:mm:ss')) {
@@ -34,22 +36,17 @@ function logData(str = '', type = '', time = moment().format('MM/DD/YYYY hh:mm:s
     }
 }
 
-//Twitter=======================================================
-function getTweets() {
-    logData('', "Tweet")
+// Bandsintown API=========================================
+var getConcerts = function (input) {
+    if (input === undefined) {
+        input = "Umphrey's Mcgee"
+        console.log(input)
+    }
+    console.log(input)
 
-    twitter.get('statuses/user_timeline', function (err, response) {
-        if (err) {
-            return console.log(err);
-        }
-        for (tweet of response) {
-            var timestamp = moment(tweet.created_at, 'ddd MMM DD hh:mm:ss ZZ YYYY').format('MM/DD/YY hh:mm:ss')
-
-            logData(timestamp + ' ' + tweet.text + "\n");
-        }
-        logData('\n')
-    });
 }
+
+
 
 //Get names of various artists=============================
 var getArtistNames = function (artist) {
@@ -57,93 +54,104 @@ var getArtistNames = function (artist) {
 }
 
 //Spotify=================================================
-var searchSong = function (title) {
+var searchSong = function (input) {
 
-    if (title === undefined) {
-        title = "All Apologies";
+    if (input === undefined) {
+        input = "All Apologies";
     }
+    console.log(input)
 
     spotify.search({
             type: 'track',
-            query: title
+            query: 'All The Small Things'
         },
-        function (err, response) {
+        function (err, data) {
             if (err) {
-                console.log('Error occurred: ' + err);
-                return;
+                return console.log('Error occurred: ' + err);
             }
-
-            var tracks = response.tracks.items;
-
-            for (var i = 0; i < tracks.length; i++) {
-
-                logData("Artist: " + tracks[i].artists.map(getArtistNames) + '\n' +
-                    "Song Name: " + tracks[i].name + '\n' +
-                    "Preview: " + tracks[i].preview_url + '\n' +
-                    "Album Name: " + tracks[i].album.name + '\n\n', +
-                    "------------------------------------------------")
-            }
+            console.log(data)
+            //var tracks = response.tracks.items;
         })
-}
+    //for (var i = 0; i < tracks.length; i++) {
 
-//OMDB
-var searchMovie = function (movieTitle) {
-    if (movieTitle === undefined) {
-        movieTitle = "Eternal Sunshine Of The Spotless Mind"
+
+    //OMDB
+    var searchMovie = function (inputWords) {
+        if (inputWords === undefined) {
+            inputWords = "Eternal Sunshine Of The Spotless Mind"
+        }
+
+        var queryUrl = 'https://omdbapi.com/?t=' + inputWords + '&y=&plot=full&tomatoes=true&apikey=trilogy'
+
+        axios.get(queryUrl).then(
+            function (response) {
+                var movie = response.data;
+                logData(
+                    "Title: " + movie.Title + '\n' +
+                    "Year: " + movie.Year + '\n' +
+                    "IMDB Score: " + movie.imdbRating + '\n' +
+                    "Rotten Tomatoes Rating: " + movie.Ratings[1].Value + '\n' +
+                    "Country: " + movie.Country + '\n' +
+                    "Language: " + movie.Language + '\n' +
+                    "Plot: " + movie.Plot + '\n' +
+                    "Actors: " + movie.Actors + '\n',
+                    "-----------------------------------------------------------"
+                );
+            });
+
     }
 
-    var queryUrl = 'https://omdbapi.com/?t=' + movieTitle + '&y=&plot=full&tomatoes=true&apikey=trilogy'
+    if (!command) {
+        var data = fs.readFileSync('./random.txt', 'utf8');
+        var arr = data.split(',');
+        comand = arr[0];
+        input = arr[1];
+    }
 
-    axios.get(queryUrl).then(
-        function (response) {
-            var movie = response.data;
-            logData(
-                "Title: " + movie.Title + '\n' +
-                "Year: " + movie.Year + '\n' +
-                "IMDB Score: " + movie.imdbRating + '\n' +
-                "Rotten Tomatoes Rating: " + movie.Ratings[1].Value + '\n' +
-                "Country: " + movie.Country + '\n' +
-                "Language: " + movie.Language + '\n' +
-                "Plot: " + movie.Plot + '\n' +
-                "Actors: " + movie.Actors + '\n',
-                "-----------------------------------------------------------"
-            );
+
+    //using switch-case statements to givi liri bot commands
+    switch (command) {
+        case 'concert-this':
+            getConcerts();
+            break;
+        case 'spotify-this-song':
+            searchSong(input);
+            break;
+        case 'movie-this':
+            searchMovie(input);
+            break;
+        default:
+            console.log("I'm sorry, LIRI doesn't recognize that command.");
+    }
+
+
+
+    // TWEETS FUNcTIONALITY==========================================================================
+
+    //client.stream('statuses/filter', {track: 'twitter'}, function(stream) {
+    //stream.on('data', function(tweet) {
+    //console.log(tweet.text);
+    //});
+
+    //stream.on('error', function(error) {
+    // console.log(error);
+    //});
+    //})
+
+    //Twitter=======================================================
+    function getTweets() {
+        logData('', "Tweet")
+
+        twitter.get('statuses/user_timeline', function (err, response) {
+            if (err) {
+                return console.log(err);
+            }
+            for (tweet of response) {
+                var timestamp = moment(tweet.created_at, 'ddd MMM DD hh:mm:ss ZZ YYYY').format('MM/DD/YY hh:mm:ss')
+
+                logData(timestamp + ' ' + tweet.text + "\n");
+            }
+            logData('\n')
         });
-
+    }
 }
-
-if (!command) {
-    var data = fs.readFileSync('./random.txt', 'utf8');
-    var arr = data.split(',');
-    comand = arr[0];
-    input = arr[1];
-}
-
-
-//using switch-case statements to givi liri bot commands
-switch (command) {
-    case 'get-tweets':
-        getTweets();
-        break;
-    case 'spotify-this-song':
-        searchSong(input);
-        break;
-    case 'movie-this':
-        searchMovie(input);
-        break;
-    default:
-        console.log("I'm sorry, LIRI doesn't recognize that command.");
-}
-
-
-
-
-//client.stream('statuses/filter', {track: 'twitter'}, function(stream) {
-//stream.on('data', function(tweet) {
-//console.log(tweet.text);
-//});
-
-//stream.on('error', function(error) {
-// console.log(error);
-//});
-//})
