@@ -33,7 +33,9 @@ function startApp(command, input) {
             doThis();
             break;
         default:
-            console.log("I'm sorry, LIRI doesn't recognize that command.")
+            console.log("\nI'm sorry, LIRI doesn't recognize that command.\n");
+            console.log('Commands that LIRI recognizes include:\n')
+            console.log("spotify-this-song \n movie-this \n concert-this \n do-what-it-says \n")
 
     }
 }
@@ -44,7 +46,15 @@ function startApp(command, input) {
 
 
 // 'movie-this' (OMDB API)============================================
-
+function movieThis(input) {
+    var queryUrl = 'http://www.omdbapi.com/?t=' + input + '&apikey=trilogy'
+    axios.get(queryUrl)
+    .then(function (response){
+        console.log(response)
+    }).catch(function(error){
+        console.log(error)
+    })
+}
 
 
 
