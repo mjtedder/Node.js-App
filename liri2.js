@@ -47,10 +47,19 @@ function startApp(command, input) {
 
 // 'movie-this' (OMDB API)============================================
 function movieThis(input) {
-    var queryUrl = 'http://www.omdbapi.com/?t=' + input + '&apikey=trilogy'
+    var queryUrl = 'http://www.omdbapi.com/?t=' + input + '&y=&plot=full&tomatoes=true&apikey=trilogy'
     axios.get(queryUrl)
     .then(function (response){
-        console.log(response)
+        var movie = response.data
+        console.log('\nTitle: ' + movie.Title + '\n' +
+        'Year: ' + movie.Year + '\n' +
+        'IMDB Score: ' + movie.imdbRating + '\n' +
+        'Rotten Tomatoes Rating: ' + movie.Ratings[1].Value + '\n' +
+        'Country: ' + movie.Country + '\n' +
+        'Language: ' + movie.Language + '\n' +
+        'Plot: ' + movie.Plot + '\n' +
+        'Actors: ' + movie.Actors + '\n',
+        '----------------------------------------------------------------------------------------------')
     }).catch(function(error){
         console.log(error)
     })
