@@ -20,8 +20,7 @@ var input = multipleWords.join(' ')
 function startApp(command, input) {
     switch (command) {
         case 'concert-this':
-            console.log(input)
-            //bandsThis(input)
+            bandsThis(input)
             break;
         case 'spotify-this-song':
             spotifyThis(input)
@@ -40,13 +39,12 @@ function startApp(command, input) {
     }
 }
 
-
-
-
-
-
 // 'movie-this' (OMDB API)============================================
+
 function movieThis(input) {
+    if (input === undefined) {
+        input = 'Mr Nobody'
+    }
     var queryUrl = 'http://www.omdbapi.com/?t=' + input + '&y=&plot=full&tomatoes=true&apikey=trilogy'
     axios.get(queryUrl)
     .then(function (response){
@@ -60,16 +58,29 @@ function movieThis(input) {
         'Plot: ' + movie.Plot + '\n' +
         'Actors: ' + movie.Actors + '\n',
         '----------------------------------------------------------------------------------------------')
-    }).catch(function(error){
+    }).catch(function(error) {
         console.log(error)
     })
 }
 
-
-
-
 // 'concert-this' (Bands In Town API)=================================
+function bandsThis(input) {
+    var queryUrl = 'https://rest.bandsintown.com/artists/' + input + '/events?app_id=codingbootcamp&date=upcoming'
+    axios.get(queryUrl)
+    .then(function (response){
+        var jsonData = response.data
+        for (i = 0; i < jsonData.length; i++) {
+            console.log('\nName: ' + input)
+            console.log('Venue: ' + jsonData[i].venue.name)
+            console.log('Location: ' + jsonData[i].venue.city + ', ' + jsonData[i].venue.region)
+            console.log('Date: ' + moment(jsonData[i].datetime).format('MMMM Do YYYY'))
+            console.log('-----------------------------------------------------------------------')
 
+        }
+    }).catch(function(error){
+        console.log(error)
+    })
+}
 
 
 
