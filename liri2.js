@@ -47,51 +47,53 @@ function movieThis(input) {
     }
     var queryUrl = 'http://www.omdbapi.com/?t=' + input + '&y=&plot=full&tomatoes=true&apikey=trilogy'
     axios.get(queryUrl)
-    .then(function (response){
-        var movie = response.data
-        console.log('\nTitle: ' + movie.Title + '\n' +
-        'Year: ' + movie.Year + '\n' +
-        'IMDB Score: ' + movie.imdbRating + '\n' +
-        'Rotten Tomatoes Rating: ' + movie.Ratings[1].Value + '\n' +
-        'Country: ' + movie.Country + '\n' +
-        'Language: ' + movie.Language + '\n' +
-        'Plot: ' + movie.Plot + '\n' +
-        'Actors: ' + movie.Actors + '\n',
-        '----------------------------------------------------------------------------------------------')
-    }).catch(function(error) {
-        console.log(error)
-    })
+        .then(function (response) {
+            var movie = response.data
+            console.log('\nTitle: ' + movie.Title + '\n' +
+                'Year: ' + movie.Year + '\n' +
+                'IMDB Score: ' + movie.imdbRating + '\n' +
+                'Rotten Tomatoes Rating: ' + movie.Ratings[1].Value + '\n' +
+                'Country: ' + movie.Country + '\n' +
+                'Language: ' + movie.Language + '\n' +
+                'Plot: ' + movie.Plot + '\n' +
+                'Actors: ' + movie.Actors + '\n',
+                '----------------------------------------------------------------------------------------------')
+        }).catch(function (error) {
+            console.log(error)
+        })
 }
 
 // 'concert-this' (Bands In Town API)=================================
 function bandsThis(input) {
     var queryUrl = 'https://rest.bandsintown.com/artists/' + input + '/events?app_id=codingbootcamp&date=upcoming'
     axios.get(queryUrl)
-    .then(function (response){
-        var jsonData = response.data
-        for (i = 0; i < jsonData.length; i++) {
-            console.log('\nName: ' + input)
-            console.log('Venue: ' + jsonData[i].venue.name)
-            console.log('Location: ' + jsonData[i].venue.city + ', ' + jsonData[i].venue.region)
-            console.log('Date: ' + moment(jsonData[i].datetime).format('MMMM Do YYYY'))
-            console.log('-----------------------------------------------------------------------')
+        .then(function (response) {
+            var jsonData = response.data
+            for (i = 0; i < jsonData.length; i++) {
+                console.log('\nName: ' + input)
+                console.log('Venue: ' + jsonData[i].venue.name)
+                console.log('Location: ' + jsonData[i].venue.city + ', ' + jsonData[i].venue.region)
+                console.log('Date: ' + moment(jsonData[i].datetime).format('MMMM Do YYYY'))
+                console.log('-----------------------------------------------------------------------')
 
-        }
-    }).catch(function(error){
-        console.log(error)
-    })
+            }
+        }).catch(function (error) {
+            console.log(error)
+        })
 }
-
-
-
-
-
-
-
 
 // 'spotify-this-song' (Spotify API)==================================
 
-
+function spotifyThis(input) {
+    spotify.search({
+        type: 'track',
+        query: input
+    }).then(function (response) {
+        console.log(response.tracks.items)
+    }).catch(function (err) {
+        console.log(err)
+    })
+}
 
 
 
