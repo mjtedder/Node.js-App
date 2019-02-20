@@ -89,7 +89,11 @@ function spotifyThis(input) {
         type: 'track',
         query: input
     }).then(function (response) {
-        console.log(response.tracks.items)
+        var song = response.tracks.items
+        for (var i = 0; i < song.length; i++) {
+        console.log(i)
+        console.log(song[i].name)
+        }
     }).catch(function (err) {
         console.log(err)
     })
