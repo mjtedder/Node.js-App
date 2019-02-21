@@ -82,8 +82,12 @@ function bandsThis(input) {
         })
 }
 
-// 'spotify-this-song' (Spotify API)==================================
+// getArtistNames helper function
+var getArtistNames = function(artist) {
+    return artist.name
+}
 
+// 'spotify-this-song' (Spotify API)==================================
 function spotifyThis(input) {
     spotify.search({
         type: 'track',
@@ -91,9 +95,13 @@ function spotifyThis(input) {
     }).then(function (response) {
         var song = response.tracks.items
         for (var i = 0; i < song.length; i++) {
-        console.log(i)
-        console.log(song[i].name)
-        }
+        console.log('Result ' + i)
+        console.log('Track: ' + song[i].name)
+        console.log('Artist(s): ' + song[i].artists.map(getArtistNames))
+        console.log('URL: ' + song[i].href)
+        console.log('Album: ' + song[i].album.name)
+        console.log('-----------------------------------------------------------')
+    }
     }).catch(function (err) {
         console.log(err)
     })
