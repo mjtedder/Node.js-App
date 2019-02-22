@@ -5,6 +5,7 @@ var axios = require('axios')
 var fs = require('fs')
 var keys = require('./keys')
 var Spotify = require('node-spotify-api')
+var colors = require('colors')
 
 
 // KEYS ==============================================================
@@ -32,9 +33,9 @@ function startApp(command, input) {
             doThis();
             break;
         default:
-            console.log("\nI'm sorry, LIRI doesn't recognize that command.\n");
-            console.log('Commands that LIRI recognizes include:\n')
-            console.log("spotify-this-song \n movie-this \n concert-this \n do-what-it-says \n")
+            console.log("\nI'm sorry, LIRI doesn't recognize that command.\n".green);
+            console.log('Commands that LIRI recognizes include:\n'.green)
+            console.log("\nspotify-this-song \n movie-this \n concert-this \n do-what-it-says \n".red)
 
     }
 }
@@ -83,7 +84,7 @@ function bandsThis(input) {
 }
 
 // getArtistNames helper function
-var getArtistNames = function(artist) {
+var getArtistNames = function (artist) {
     return artist.name
 }
 
@@ -95,13 +96,13 @@ function spotifyThis(input) {
     }).then(function (response) {
         var song = response.tracks.items
         for (var i = 0; i < song.length; i++) {
-        console.log('Result ' + i)
-        console.log('Track: ' + song[i].name)
-        console.log('Artist(s): ' + song[i].artists.map(getArtistNames))
-        console.log('URL: ' + song[i].href)
-        console.log('Album: ' + song[i].album.name)
-        console.log('-----------------------------------------------------------')
-    }
+            console.log('Result ' + i)
+            console.log('Track: ' + song[i].name)
+            console.log('Artist(s): ' + song[i].artists.map(getArtistNames))
+            console.log('URL: ' + song[i].href)
+            console.log('Album: ' + song[i].album.name)
+            console.log('-----------------------------------------------------------')
+        }
     }).catch(function (err) {
         console.log(err)
     })
