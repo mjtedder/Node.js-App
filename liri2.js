@@ -11,7 +11,7 @@ var Twitter = require('twitter')
 
 // KEYS ==============================================================
 var spotify = new Spotify(keys.spotify)
-var t = new Twitter(keys.Twitter)
+var t = new Twitter(keys.twitter)
 
 // SAVING USER INPUT TO VARIABLES ====================================
 
