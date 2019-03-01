@@ -128,18 +128,21 @@ function getTweets(input) {
             // loop through returned the returned tweets
             for(let i = 0; i < data.statuses.length; i++) {
                 // Get the tweet ID of the returned data
-                var id = { id: data.statuses[i].id_str }
-                var name = { name: data.statuses[i].name }
-                var description = { description: data.statuses[i].description }
-                var url = { url: data.statuses[i].url }
-                var followers = { followers: data.statuses[i].followers_count }
-                var createdAt = { createdAt: data.statuses[i].created_at }
-                console.log(id)
-                console.log(name)
-                console.log(description)
-                console.log(url)
-                console.log(followers)
-                console.log(createdAt)
+                // var id = { id: data.statuses[i].id_str }
+                var name = data.statuses[i].user.screen_name
+                var text = data.statuses[i].text
+                var url = data.statuses[i].url
+                var followers = data.statuses[i].user.followers_count
+                var createdAt = data.statuses[i].user.created_at
+                //console.log(data.statuses[i])
+                // console.log(id)
+                console.log('\n-----------------------------------------------')
+                console.log('Twitter Handle: ' + '@' + name)
+                console.log('Tweet: ' + text)
+                //console.log(url)
+                console.log('Followers: ' + followers)
+                console.log('Date Created: ' + createdAt)
+                console.log('-------------------------------------------------\n')
             }
         } else {
             console.log(err)
