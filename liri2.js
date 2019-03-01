@@ -125,8 +125,22 @@ function getTweets(input) {
     }
     t.get('search/tweets', params, function(err, data, response) {
         if(!err) {
-            console.log(data)
-            console.log(response)
+            // loop through returned the returned tweets
+            for(let i = 0; i < data.statuses.length; i++) {
+                // Get the tweet ID of the returned data
+                var id = { id: data.statuses[i].id_str }
+                var name = { name: data.statuses[i].name }
+                var description = { description: data.statuses[i].description }
+                var url = { url: data.statuses[i].url }
+                var followers = { followers: data.statuses[i].followers_count }
+                var createdAt = { createdAt: data.statuses[i].created_at }
+                console.log(id)
+                console.log(name)
+                console.log(description)
+                console.log(url)
+                console.log(followers)
+                console.log(createdAt)
+            }
         } else {
             console.log(err)
         }
