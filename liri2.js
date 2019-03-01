@@ -6,12 +6,15 @@ var fs = require('fs')
 var keys = require('./keys')
 var Spotify = require('node-spotify-api')
 var colors = require('colors')
+var Twitter = require('twitter')
 
 
 // KEYS ==============================================================
 var spotify = new Spotify(keys.spotify)
+var t = new Twitter(keys.Twitter)
 
 // SAVING USER INPUT TO VARIABLES ====================================
+
 var command = process.argv[2]
 var multipleWords = process.argv.slice(3)
 var input = multipleWords.join(' ')
@@ -28,6 +31,9 @@ function startApp(command, input) {
             break;
         case 'movie-this':
             movieThis(input)
+            break;
+        case 'get-tweets':
+            getTweets(input)
             break;
         case 'do-what-it-says':
             doThis();
@@ -108,9 +114,24 @@ function spotifyThis(input) {
     })
 }
 
-
-
-
+// 'get-tweets' (twitter API)
+function getTweets(input) {
+    // set up params
+    var params = {
+        q: input,
+        count: 10,
+        result_type: 'recent',
+        lang: 'en'
+    }
+    t.get('search/tweets', params, function(err, data, response) {
+        if(!err) {
+            console.log(data)
+            console.log(response)
+        } else {
+            console.log(err)
+        }
+    })
+}
 
 
 // 'do-what-it-says' (fs.ReadFile)====================================
