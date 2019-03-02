@@ -41,7 +41,7 @@ function startApp(command, input) {
         default:
             console.log("\nI'm sorry, LIRI doesn't recognize that command.\n".green);
             console.log('Commands that LIRI recognizes include:\n'.green)
-            console.log("\nspotify-this-song \n movie-this \n concert-this \n do-what-it-says \n".red)
+            console.log("spotify-this-song \n movie-this \n concert-this \n get-tweets \n do-what-it-says \n".red)
 
     }
 }
