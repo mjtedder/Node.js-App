@@ -6,7 +6,8 @@ Similar to Apple's SIRI, LIRI (Language Interpretation Recognition Interface) is
 
 ![Travis](https://img.shields.io/travis/USER/REPO.svg)
 ![npm](https://img.shields.io/npm/v/npm.svg)
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+![repo-size](https://img.shields.io/github/repo-size/mjtedder/Node.js-App.svg)
+
 
 ## Installation
 
@@ -19,7 +20,7 @@ Next, install the application dependencies:
 	* cd your/path/to/Node.js-Appclone
 	* yarn install
 
-### Usage
+## Usage
 
 LIRI takes in various commands:
 
