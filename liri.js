@@ -1,157 +1,164 @@
-//todo:
-//get "do-what-it-says" command working for liri bot
-//
-
-require("dotenv").config();
-
-//setting variables to require NPM packages for app to work
-var keys = require('./keys');
-var Twitter = require('twitter');
-var Spotify = require('node-spotify-api');
-var moment = require('moment');
-var request = require('request');
-var axios = require('axios');
-var fs = require('fs');
-
-//getting API keys
-var spotify = new Spotify(keys.spotify);
-var twitter = new Twitter(keys.twitter);
-
-// saving user inputs to a variable
-var command = process.argv[2];
-var input = process.argv[3];
-// var inputWords = inputWords.join(' ');
+// REQUIRED DEPENDENCIES =============================================
+require('dotenv').config()
+var moment = require('moment')
+var axios = require('axios')
+var fs = require('fs')
+var keys = require('./keys')
+var Spotify = require('node-spotify-api')
+var colors = require('colors/safe')
+var Twitter = require('twitter')
 
 
-//Uses moment.js to log timestamps each time liri app is used
-function logData(str = '', type = '', time = moment().format('MM/DD/YYYY hh:mm:ss')) {
+// KEYS ==============================================================
+var spotify = new Spotify(keys.spotify)
+var t = new Twitter(keys.twitter)
 
-    if (type) {
-        fs.appendFileSync('./log.txt', type + " request made at: " + time + '\n');
-    }
-    if (str) {
-        console.log(str);
+// COLORS PACKAGE THEME===============================================
+colors.setTheme({
+    body: 'green',
+    error: 'red'
+})
 
-        fs.appendFileSync('./log.txt', str);
-    }
-}
+// SAVING USER INPUT TO VARIABLES ====================================
 
-// Bandsintown API=========================================
-var getConcerts = function (input) {
-    if (input === undefined) {
-        input = "Umphrey's Mcgee"
-        console.log(input)
-    }
-    console.log(input)
-
-}
+var command = process.argv[2]
+var multipleWords = process.argv.slice(3)
+var input = multipleWords.join(' ')
 
 
-
-//Get names of various artists=============================
-var getArtistNames = function (artist) {
-    return artist.name;
-}
-
-//Spotify=================================================
-var searchSong = function (input) {
-
-    if (input === undefined) {
-        input = "All Apologies";
-    }
-    console.log(input)
-
-    spotify.search({
-            type: 'track',
-            query: 'All The Small Things'
-        },
-        function (err, data) {
-            if (err) {
-                return console.log('Error occurred: ' + err);
-            }
-            console.log(data)
-            //var tracks = response.tracks.items;
-        })
-    //for (var i = 0; i < tracks.length; i++) {
-
-
-    //OMDB
-    var searchMovie = function (inputWords) {
-        if (inputWords === undefined) {
-            inputWords = "Eternal Sunshine Of The Spotless Mind"
-        }
-
-        var queryUrl = 'https://omdbapi.com/?t=' + inputWords + '&y=&plot=full&tomatoes=true&apikey=trilogy'
-
-        axios.get(queryUrl).then(
-            function (response) {
-                var movie = response.data;
-                logData(
-                    "Title: " + movie.Title + '\n' +
-                    "Year: " + movie.Year + '\n' +
-                    "IMDB Score: " + movie.imdbRating + '\n' +
-                    "Rotten Tomatoes Rating: " + movie.Ratings[1].Value + '\n' +
-                    "Country: " + movie.Country + '\n' +
-                    "Language: " + movie.Language + '\n' +
-                    "Plot: " + movie.Plot + '\n' +
-                    "Actors: " + movie.Actors + '\n',
-                    "-----------------------------------------------------------"
-                );
-            });
-
-    }
-
-    if (!command) {
-        var data = fs.readFileSync('./random.txt', 'utf8');
-        var arr = data.split(',');
-        comand = arr[0];
-        input = arr[1];
-    }
-
-
-    //using switch-case statements to givi liri bot commands
+// SWITCH-CASE STATEMENT FOR LIRI COMMANDS ===========================
+function startApp(command, input) {
     switch (command) {
         case 'concert-this':
-            getConcerts();
+            bandsThis(input)
             break;
         case 'spotify-this-song':
-            searchSong(input);
+            spotifyThis(input)
             break;
         case 'movie-this':
-            searchMovie(input);
+            movieThis(input)
+            break;
+        case 'get-tweets':
+            getTweets(input)
+            break;
+        case 'do-what-it-says':
+            doThis();
             break;
         default:
-            console.log("I'm sorry, LIRI doesn't recognize that command.");
-    }
-
-
-
-    // TWEETS FUNcTIONALITY==========================================================================
-
-    //client.stream('statuses/filter', {track: 'twitter'}, function(stream) {
-    //stream.on('data', function(tweet) {
-    //console.log(tweet.text);
-    //});
-
-    //stream.on('error', function(error) {
-    // console.log(error);
-    //});
-    //})
-
-    //Twitter=======================================================
-    function getTweets() {
-        logData('', "Tweet")
-
-        twitter.get('statuses/user_timeline', function (err, response) {
-            if (err) {
-                return console.log(err);
-            }
-            for (tweet of response) {
-                var timestamp = moment(tweet.created_at, 'ddd MMM DD hh:mm:ss ZZ YYYY').format('MM/DD/YY hh:mm:ss')
-
-                logData(timestamp + ' ' + tweet.text + "\n");
-            }
-            logData('\n')
-        });
+            console.log(colors.error("\nI'm sorry, LIRI doesn't recognize that command.\n"))
+            console.log(colors.error('Commands that LIRI recognizes include:\n'))
+            console.log(colors.error("spotify-this-song \n movie-this \n concert-this \n get-tweets \n do-what-it-says \n"))
     }
 }
+
+// 'movie-this' (OMDB API)============================================
+
+function movieThis(input) {
+    if (input === undefined) {
+        input = 'Mr Nobody'
+    }
+    var queryUrl = 'http://www.omdbapi.com/?t=' + input + '&y=&plot=full&tomatoes=true&apikey=trilogy'
+    axios.get(queryUrl)
+        .then(function (response) {
+            var movie = response.data
+            console.log(colors.body('\nTitle: ' + movie.Title + '\n' +
+                'Year: ' + movie.Year + '\n' +
+                'IMDB Score: ' + movie.imdbRating + '\n' +
+                'Rotten Tomatoes Rating: ' + movie.Ratings[1].Value + '\n' +
+                'Country: ' + movie.Country + '\n' +
+                'Language: ' + movie.Language + '\n' +
+                'Plot: ' + movie.Plot + '\n' +
+                'Actors: ' + movie.Actors + '\n',
+                '----------------------------------------------------------------------------------------------'))
+        }).catch(function (error) {
+            console.log(error.error)
+        })
+}
+
+// 'concert-this' (Bands In Town API)=================================
+function bandsThis(input) {
+    var queryUrl = 'https://rest.bandsintown.com/artists/' + input + '/events?app_id=codingbootcamp&date=upcoming'
+    axios.get(queryUrl)
+        .then(function (response) {
+            var jsonData = response.data
+            for (i = 0; i < jsonData.length; i++) {
+                console.log('\nName: ' + input)
+                console.log('Venue: ' + jsonData[i].venue.name)
+                console.log('Location: ' + jsonData[i].venue.city + ', ' + jsonData[i].venue.region)
+                console.log('Date: ' + moment(jsonData[i].datetime).format('MMMM Do YYYY'))
+                console.log('-----------------------------------------------------------------------')
+
+            }
+        }).catch(function (error) {
+            console.log(error)
+        })
+}
+
+// getArtistNames helper function
+var getArtistNames = function (artist) {
+    return artist.name
+}
+
+// 'spotify-this-song' (Spotify API)==================================
+function spotifyThis(input) {
+    spotify.search({
+        type: 'track',
+        query: input
+    }).then(function (response) {
+        var song = response.tracks.items
+        for (var i = 0; i < song.length; i++) {
+            console.log('Result ' + i)
+            console.log('Track: ' + song[i].name)
+            console.log('Artist(s): ' + song[i].artists.map(getArtistNames))
+            console.log('URL: ' + song[i].href)
+            console.log('Album: ' + song[i].album.name)
+            console.log('-----------------------------------------------------------')
+        }
+    }).catch(function (err) {
+        console.log(err)
+    })
+}
+
+// 'get-tweets' (twitter API)
+function getTweets(input) {
+    // set up params
+    var params = {
+        q: input,
+        count: 10,
+        result_type: 'recent',
+        lang: 'en'
+    }
+    t.get('search/tweets', params, function(err, data, response) {
+        if(!err) {
+            // loop through returned the returned tweets
+            for(let i = 0; i < data.statuses.length; i++) {
+                // Get the tweet ID of the returned data
+                // var id = { id: data.statuses[i].id_str }
+                var name = data.statuses[i].user.screen_name
+                var text = data.statuses[i].text
+                var url = data.statuses[i].url
+                var followers = data.statuses[i].user.followers_count
+                var createdAt = data.statuses[i].user.created_at
+                //console.log(data.statuses[i])
+                // console.log(id)
+                console.log('\n-----------------------------------------------')
+                console.log('Twitter Handle: ' + '@' + name)
+                console.log('Tweet: ' + text)
+                //console.log(url)
+                console.log('Followers: ' + followers)
+                console.log('Date Tweeted: ' + moment(createdAt).format('MMM Do YYYY, h:mm:ss a'))
+                console.log('-------------------------------------------------\n')
+            }
+        } else {
+            console.log(err)
+        }
+    })
+}
+
+
+// 'do-what-it-says' (fs.ReadFile)====================================
+
+
+// CALL START FUNCTION ===============================================
+
+startApp(command, input)
