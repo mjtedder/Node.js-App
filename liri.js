@@ -71,7 +71,7 @@ function movieThis(input) {
                 'Actors: ' + movie.Actors + '\n',
                 '----------------------------------------------------------------------------------------------'))
         }).catch(function (error) {
-            console.log(error.error)
+            console.log(colors.error(error))
         })
 }
 
@@ -82,20 +82,20 @@ function bandsThis(input) {
         .then(function (response) {
             var jsonData = response.data
             for (i = 0; i < jsonData.length; i++) {
-                console.log('\nName: ' + input)
-                console.log('Venue: ' + jsonData[i].venue.name)
-                console.log('Location: ' + jsonData[i].venue.city + ', ' + jsonData[i].venue.region)
-                console.log('Date: ' + moment(jsonData[i].datetime).format('MMMM Do YYYY'))
-                console.log('-----------------------------------------------------------------------')
+                console.log(colors.body('\nName: ' + input + '\n' +
+                'Venue: ' + jsonData[i].venue.name + '\n' +
+                'Location: ' + jsonData[i].venue.city + ', ' + jsonData[i].venue.region + '\n' +
+                'Date: ' + moment(jsonData[i].datetime).format('MMMM Do YYYY') + '\n' +
+                '-----------------------------------------------------------------------'))
 
             }
         }).catch(function (error) {
-            console.log(error)
+            console.log(colors.error(error))
         })
 }
 
 // getArtistNames helper function
-var getArtistNames = function (artist) {
+var getArtistNames = function(artist) {
     return artist.name
 }
 
@@ -115,7 +115,7 @@ function spotifyThis(input) {
             console.log('-----------------------------------------------------------')
         }
     }).catch(function (err) {
-        console.log(err)
+        console.log(colors.error(err))
     })
 }
 
@@ -130,24 +130,20 @@ function getTweets(input) {
     }
     t.get('search/tweets', params, function(err, data, response) {
         if(!err) {
-            // loop through returned the returned tweets
+            // loop through the returned tweets
             for(let i = 0; i < data.statuses.length; i++) {
                 // Get the tweet ID of the returned data
                 // var id = { id: data.statuses[i].id_str }
                 var name = data.statuses[i].user.screen_name
                 var text = data.statuses[i].text
-                var url = data.statuses[i].url
+                var url = data.statuses[i].user.url
                 var followers = data.statuses[i].user.followers_count
                 var createdAt = data.statuses[i].user.created_at
-                //console.log(data.statuses[i])
-                // console.log(id)
-                console.log('\n-----------------------------------------------')
-                console.log('Twitter Handle: ' + '@' + name)
-                console.log('Tweet: ' + text)
-                //console.log(url)
-                console.log('Followers: ' + followers)
-                console.log('Date Tweeted: ' + moment(createdAt).format('MMM Do YYYY, h:mm:ss a'))
-                console.log('-------------------------------------------------\n')
+                console.log(colors.body('\nTwitter Handle: ' + '@' + name + '\n' +
+                'Tweet: ' + text + '\n' +
+                'Followers: ' + followers + '\n' +
+                'Date Tweeted: ' + moment(createdAt).format('MMM Do YYYY, h:mm:ss a') + '\n' +
+                '-------------------------------------------------'))
             }
         } else {
             console.log(err)
