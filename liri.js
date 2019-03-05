@@ -16,7 +16,8 @@ var t = new Twitter(keys.twitter)
 // COLORS PACKAGE THEME===============================================
 colors.setTheme({
     body: 'green',
-    error: 'red'
+    error: 'red',
+    choices: 'white'
 })
 
 // SAVING USER INPUT TO VARIABLES ====================================
@@ -47,7 +48,7 @@ function startApp(command, input) {
         default:
             console.log(colors.error("\nI'm sorry, LIRI doesn't recognize that command.\n"))
             console.log(colors.error('Commands that LIRI recognizes include:\n'))
-            console.log(colors.error("spotify-this-song \n movie-this \n concert-this \n get-tweets \n do-what-it-says \n"))
+            console.log(colors.choices(" spotify-this-song \n movie-this \n concert-this \n get-tweets \n do-what-it-says \n"))
     }
 }
 
@@ -107,12 +108,12 @@ function spotifyThis(input) {
     }).then(function (response) {
         var song = response.tracks.items
         for (var i = 0; i < song.length; i++) {
-            console.log('Result ' + i)
-            console.log('Track: ' + song[i].name)
-            console.log('Artist(s): ' + song[i].artists.map(getArtistNames))
-            console.log('URL: ' + song[i].href)
-            console.log('Album: ' + song[i].album.name)
-            console.log('-----------------------------------------------------------')
+            console.log(colors.body('Result ' + i +'\n' +
+            'Track: ' + song[i].name + '\n' +
+            'Artist(s): ' + song[i].artists.map(getArtistNames) + '\n' +
+            'URL: ' + song[i].href + '\n' +
+            'Album: ' + song[i].album.name + '\n' +
+            '-----------------------------------------------------------'))
         }
     }).catch(function (err) {
         console.log(colors.error(err))
@@ -146,14 +147,21 @@ function getTweets(input) {
                 '-------------------------------------------------'))
             }
         } else {
-            console.log(err)
+            console.log(colors.error(err))
         }
     })
 }
 
 
-// 'do-what-it-says' (fs.ReadFile)====================================
-
+// 'do-what-it-says' (fs.readFile)====================================
+function doThis(input) {
+    fs.readFile('random.txt', 'utf8', function(error, data) {
+        if(error) {
+            return console.log(colors.error(error))
+        }
+        console.log(colors.body(data));
+    })
+}
 
 // CALL START FUNCTION ===============================================
 
