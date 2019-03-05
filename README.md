@@ -2,7 +2,8 @@
 
 Similar to Apple's SIRI, LIRI (Language Interpretation Recognition Interface) is a CLI application that takes in commands from the user and displays the requested information in the Terminal for Mac users and Command Prompt for Windows users.
 
-| Node.JS | Moment.JS | Axios | Twitter API | Spotify API
+| [Node.JS](https://nodejs.org/en/) | [Moment.JS](https://momentjs.com/) | [Axios](https://www.npmjs.com/package/axios) | [Twitter API](https://developer.twitter.com/content/developer-twitter/en.html) | [Spotify API](https://developer.spotify.com/documentation/web-api/)
+
 
 ![Travis](https://img.shields.io/travis/USER/REPO.svg)
 ![npm](https://img.shields.io/npm/v/npm.svg)
@@ -48,7 +49,7 @@ Your patches are welcome! Here's our suggested workflow:
 
 ## Copyright and attribution
 
-Copyright (c) 2018 fully_coded. Released under the [MIT License](https://github.com/mjtedder/Node.js-App/LICENSE).
+Copyright (c) 2018 fully_coded.
 
 
 git remote add origin https://github.com/mjtedder/Node.js-App.git
