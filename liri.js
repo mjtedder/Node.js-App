@@ -159,7 +159,13 @@ function doThis(input) {
         if(error) {
             return console.log(colors.error(error))
         }
-        console.log(colors.body(data));
+        // console.log(colors.body(data));
+        var dataArray = data.split(',')
+        if (dataArray.length === 2) {
+            startApp(dataArray[0], dataArray[1])
+        } else if (dataArray.length === 1) {
+            startApp(dataArray[0])
+        }
     })
 }
 
