@@ -5,7 +5,7 @@ var axios = require('axios')
 var fs = require('fs')
 var keys = require('./keys')
 var Spotify = require('node-spotify-api')
-var colors = require('colors/safe')
+var chalk = require('chalk')
 var Twitter = require('twitter')
 
 
@@ -13,12 +13,8 @@ var Twitter = require('twitter')
 var spotify = new Spotify(keys.spotify)
 var t = new Twitter(keys.twitter)
 
-// COLORS PACKAGE THEME===============================================
-colors.setTheme({
-    body: 'green',
-    error: 'red',
-    choices: 'white'
-})
+// SAVE CONSOLE.LOG METHOD TO VARIABLE================================
+var log = console.log
 
 // SAVING USER INPUT TO VARIABLES ====================================
 
@@ -46,9 +42,9 @@ function startApp(command, input) {
             doThis();
             break;
         default:
-            console.log(colors.error("\nI'm sorry, LIRI doesn't recognize that command.\n"))
-            console.log(colors.error('Commands that LIRI recognizes include:\n'))
-            console.log(colors.choices(" spotify-this-song \n movie-this \n concert-this \n get-tweets \n do-what-it-says \n"))
+            log(chalk.greenBright("\nI'm sorry, LIRI doesn't recognize that command.\n"))
+            log(chalk.greenBright('Commands that LIRI recognizes include:\n'))
+            log(chalk.greenBright(" spotify-this-song \n movie-this \n concert-this \n get-tweets \n do-what-it-says \n"))
     }
 }
 
@@ -62,7 +58,7 @@ function movieThis(input) {
     axios.get(queryUrl)
         .then(function (response) {
             var movie = response.data
-            console.log(colors.body('\nTitle: ' + movie.Title + '\n' +
+            log(chalk.greenBright('\nTitle: ' + movie.Title + '\n' +
                 'Year: ' + movie.Year + '\n' +
                 'IMDB Score: ' + movie.imdbRating + '\n' +
                 'Rotten Tomatoes Rating: ' + movie.Ratings[1].Value + '\n' +
@@ -72,7 +68,7 @@ function movieThis(input) {
                 'Actors: ' + movie.Actors + '\n',
                 '----------------------------------------------------------------------------------------------'))
         }).catch(function (error) {
-            console.log(colors.error(error))
+            log(chalk.redBright(error))
         })
 }
 
@@ -83,7 +79,7 @@ function bandsThis(input) {
         .then(function (response) {
             var jsonData = response.data
             for (i = 0; i < jsonData.length; i++) {
-                console.log(colors.body('\nName: ' + input + '\n' +
+                log(chalk.greenBright('\nName: ' + input + '\n' +
                 'Venue: ' + jsonData[i].venue.name + '\n' +
                 'Location: ' + jsonData[i].venue.city + ', ' + jsonData[i].venue.region + '\n' +
                 'Date: ' + moment(jsonData[i].datetime).format('MMMM Do YYYY') + '\n' +
@@ -91,7 +87,7 @@ function bandsThis(input) {
 
             }
         }).catch(function (error) {
-            console.log(colors.error(error))
+            log(chalk.redBright(error))
         })
 }
 
@@ -116,7 +112,7 @@ function spotifyThis(input) {
             '-----------------------------------------------------------'))
         }
     }).catch(function (err) {
-        console.log(colors.error(err))
+        log(chalk.redBright(err))
     })
 }
 
@@ -140,14 +136,14 @@ function getTweets(input) {
                 var url = data.statuses[i].user.url
                 var followers = data.statuses[i].user.followers_count
                 var createdAt = data.statuses[i].user.created_at
-                console.log(colors.body('\nTwitter Handle: ' + '@' + name + '\n' +
+                log(chalk.greenBright('\nTwitter Handle: ' + '@' + name + '\n' +
                 'Tweet: ' + text + '\n' +
                 'Followers: ' + followers + '\n' +
                 'Date Tweeted: ' + moment(createdAt).format('MMM Do YYYY, h:mm:ss a') + '\n' +
                 '-------------------------------------------------'))
             }
         } else {
-            console.log(colors.error(err))
+            log(chalk.redBright(err))
         }
     })
 }
@@ -157,7 +153,7 @@ function getTweets(input) {
 function doThis(input) {
     fs.readFile('random.txt', 'utf8', function(error, data) {
         if(error) {
-            return console.log(colors.error(error))
+            return log(chalk.redBright(error))
         }
         // console.log(colors.body(data));
         var dataArray = data.split(',')
